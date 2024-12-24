@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>테이블 정렬 프로그램</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <table id="targetTable">
+        <thead>
+            <tr>
+                <th>선택</th>
+                <th>Seq</th>
+                <th>Title</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td><input type="number" class="order_no" min="1" max="99" value="1"></td>
+                <td>제목 1</td>
+                <td>2024-10-11</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td><input type="number" class="order_no" min="1" max="99" value="2"></td>
+                <td>제목 2</td>
+                <td>2024-10-12</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td><input type="number" class="order_no" min="1" max="99" value="3"></td>
+                <td>제목 3</td>
+                <td>2024-10-13</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td><input type="number" class="order_no" min="1" max="99" value="4"></td>
+                <td>제목 4</td>
+                <td>2024-10-14</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td><input type="number" class="order_no" min="1" max="99" value="5"></td>
+                <td>제목 5</td>
+                <td>2024-10-15</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td><input type="number" class="order_no" min="1" max="99" value="6"></td>
+                <td>제목 6</td>
+                <td>2024-10-16</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td><input type="number" class="order_no" min="1" max="99" value="7"></td>
+                <td>제목 7</td>
+                <td>2024-10-17</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td><input type="number" class="order_no" min="1" max="99" value="8"></td>
+                <td>제목 8</td>
+                <td>2024-10-18</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td><input type="number" class="order_no" min="1" max="99" value="9"></td>
+                <td>제목 9</td>
+                <td>2024-10-19</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td><input type="number" class="order_no" min="1" max="99" value="10"></td>
+                <td>제목 10</td>
+                <td>2024-10-20</td>
+            </tr>
+        </tbody>
+    </table>
+    <button id="sortButton">정렬하기</button>
+    <div id="result"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

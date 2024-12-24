@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Dom</title>
+
+   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+</head>
+<body>
+   <div>Dom</div>
+
+   <!-- beforebegin -->
+   <p id="one">
+   <!-- afterbegin -->
+   foo
+   <!-- beforeend -->
+   </p>
+   <!-- afterend -->   
+
+
+   <div id="a">a</div>
+   nextSibling
+   <div id="b">b</div>
+
+   <button id="confirmBtn" class="aclass bclass cclass disabled">classList</button>
+   <br><br>
+
+   <label for="fromTime">fromTime:</label>
+   <select name="fromTime" id="fromTime">
+   </select>
+   <br><br>
+   <div>
+      <label for="toTime">toTime:</label>
+      <select name="toTime" id="toTime" multiple> <!-- multiple: Ctrl 키와 함께 복수개 선택 가능 -->
+      </select>
+   </div>
+   <br><br>
+   <div>
+      <label for="fruitSelect">과일 선택하기:</label>
+      <select name="fruitSelect" id="fruitSelect">
+      </select>
+   </div>
+   <br><br><br>
+   ctrl키를 누르고 선택 시 중복선택 가능<br>
+   <label for="car1">car1:</label>
+   <select name="car1" id="car1" size="10">
+      <optgroup label="외제차 브랜드">
+         <option value="benz">벤츠</option>
+         <option value="bmw">BMW</option>
+         <option value="audi" disabled>아우디</option>
+         <option value="ford" selected>포드</option>
+      </optgroup>
+      <optgroup label="국산차 브랜드">
+         <option value="benz">현대</option>
+         <option value="bmw">기아</option>
+         <option value="audi" disabled>쌍용</option>
+         <option value="ford" selected>르노삼성</option>
+      </optgroup>
+   </select>
+
+   
+   <br><br>
+   <form action="">
+      <input type="checkbox" name="language" value="html" checked> HTML <br>
+      <input type="checkbox" name="language" value="css"> CSS <br>
+      <input type="checkbox" name="language" value="java"> JAVA <br>
+      <input type="checkbox" name="language" value="cpp"> C
+  </form>
+
+
+   <script src="dom.js"></script>
+</body>
+</html>

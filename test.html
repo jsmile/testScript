@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+
+  <script src="./jquery-3.4.1.js"></script>
+  <script src="./jquery-ui.js"></script>
+
+  <link rel="stylesheet" href="./jquery-ui.css">
+
+</head>
+<body>
+  <form action="#">
+    <p>시작일자 : <input type="text" name="startDate" id="startDate"></p>
+    <p>종료일자 : <input type="text" name="endDate" id="endDate"></p>
+  </form>
+
+  <script>
+    
+    $( document ).ready( function()
+    {
+      var dtNow = new Date();
+
+      $( '#startDate' ).datepicker( 
+      {
+        dateFormat: 'yy-mm-dd', 
+        closeText: '닫기',
+        prevText: '이전달',
+        nextText: '다음달',
+        currentText: '오늘',
+        monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+        dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+        yearSuffix: '년',
+        weekHeader: 'Wk',
+        firstDay: 0,
+        isRTL: false,
+        duration: 200,
+        showAnim: 'show',
+        maxDate: new Date(),       // 오늘 날자이후 데이터 클릭은 막기위해
+        changeMonth: true,
+        //changeYear: true,
+        //yearRange: 'c-10:c',
+        showMonthAfterYear: true,   // 다른 개월을 표시함
+        yearSuffix: '년',
+        showOtherMonths: true, // 나머지 날짜도 화면에 표시
+        selectOtherMonths: true, // 나머지 날짜에도 선택을 하려면 true
+        defaultDate: new Date(),
+        beforeShow: function ( input, inst ) 
+        {
+          // 일자 선택되기전 이벤트 발생
+        },
+        onSelect: function( dateText, inst ) 
+        {
+          alert( 'startDate 1 : *' + dateText );
+          console.log( 'startDate : *', $( '#startDate' ).val() );
+          $( '#endDate' ).datepicker( "setDate", "2019-09-20" );
+        }
+      } );
+
+      $( '#endDate' ).datepicker( 
+      {
+        dateFormat: 'yy-mm-dd', 
+        onSelect: function() 
+        {
+          alert( 'endDate' );
+          console.log( 'endDate : *', $( '#endDate' ).val() );
+          $( '#startDate' ).datepicker( "setDate", "2019-08-20" );
+        }
+      } );
+
+      // $.datepicker.setDefaults($.datepicker.regional['ko']);
+
+    });
+
+    
+  </script>
+</body>
+</html>
