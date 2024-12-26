@@ -562,7 +562,9 @@ selectedItemUl.addEventListener( 'DOMNodeRemoved', function( event )
 */  
 
 el = document.querySelector( 'img' );
+// // BAD: Might not work as expected
+// el.src = 'dog.jpg';
+// el.classList.add('fadeIn');  // Too early!
 el.src = 'dog.jpg';      // asynchronous task of DOM
-el.addEventListener( 'load', el => el.classList.add( 'fadeIn' ) );
-fatch( 'http://someUrl.com/api' )
-   .then( res => console.log( res ) );
+el.addEventListener( 'load', el => el.classList.add( 'fadeIn' ) );  // 이미지를 불러오는 DOM 의 비동기 작업이 완료된 후에 실행을 보장함.
+
