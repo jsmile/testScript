@@ -152,6 +152,9 @@
  *       $=                              :    값의 끝이  
  *       *=                              :    값에서   
  * 
+ * 
+ * ## Asynchronous task with DOM
+ * 
 */
 
 var d1 = document.getElementById('one');
@@ -544,3 +547,22 @@ selectedItemUl.addEventListener( 'DOMNodeRemoved', function( event )
 	document.querySelector( '#checkItemsSpan' ).innerText = '선택된 기관 수 :  ' + itemsCount + ' 개';
 });
 */
+
+
+
+/*
+   Asynchronous task with DOM
+   DOM 은 Call Stack 이 아닌 WEB API Environment 에서 실행되므로 연결된 asynchrous 작업이 필요할 경우에는 addEventListener( 'load', callback ) 가 필요하다.
+   DOM :  WEB API Environment -> Micro Task Queue : for Promise -> Call Stack
+                                          -> CallBack Queue -> Call Stack 
+            Micro Task Queue 가 Callback Queue 보다 우선적인 작업권이 부여됨
+                                          
+      addEventListener(), Fetch(), setTimer()  : asynchronous task
+   그 외 DOM 작업                            : immediate excution task
+*/  
+
+el = document.querySelector( 'img' );
+el.src = 'dog.jpg';      // asynchronous task of DOM
+el.addEventListener( 'load', el => el.classList.add( 'fadeIn' ) );
+fatch( 'http://someUrl.com/api' )
+   .then( res => console.log( res ) );

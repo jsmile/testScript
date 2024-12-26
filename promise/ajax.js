@@ -6,8 +6,7 @@
  * - Async, Await : 비동기화된 Promise 객체를 반환한다, ES7( 2017 )
  * - Promise in Parallel : await Promise.all( array )
  * - Asyc Fetch Promise( ES6 ) : 비동기 fetch 를 통한 ajax
- * - Asynchronous task with DOM
- * Top Level await : aysnc 없는 await ( ES2022 )
+ * - Top Level await : aysnc 없는 await ( ES2022 )
  * 
 */
 
@@ -18,9 +17,9 @@
    Promise 를 지원하지 않아서 callback 함수를 사용해야 함.
       new XMLHttpRequest() : XMLHttpRequest 객체를 생성
       open( method, url, async ) : 요청을 준비함
+      send() : 요청을 전송함
       addEventListener( 'load', function(){} ) : 요청이 완료되면 실행할 함수 지정
       addEventListener( 'error', function( e ){} ) : 요청이 실패하면 실행할 함수 지정
-      send() : 요청을 전송함
 */
 
 const firstReq = new XMLHttpRequest();
@@ -223,67 +222,248 @@ var resolveAfter2Seconds = function () {
        console.log("완료...slow promise");
      }, 2000);
    });
- };
- 
- var resolveAfter1Second = function () {
-   console.log("시작...fast promise");
-   return new Promise((resolve) => {
-     setTimeout(function () {
-       resolve(10);
-       console.log("완료...fast promise");
-     }, 1000);
-   });
- };
+};
 
- // 실행과 작업종료 모두 await 순서대로 진행됨.
- var sequentialStart = async function () {
-   console.log("### SEQUENTIAL START ###");
- 
-   const slow = await resolveAfter2Seconds();
-   console.log('sequentialStart: ', slow);
- 
-   const fast = await resolveAfter1Second();
-   console.log('sequentialStart: ', fast);
- };
+var resolveAfter1Second = function () {
+  console.log("시작...fast promise");
+  return new Promise((resolve) => {
+    setTimeout(function () {
+      resolve(10);
+      console.log("완료...fast promise");
+    }, 1000);
+  });
+};
 
- // 순차적으로 실행되고, 먼저 작업 종료와 상관없이 await 순서로 출력함.
- var concurrentStart = async function () {
-   console.log("### CONCURRENT START with await ###");
+// 실행과 작업종료 모두 await 순서대로 진행됨.
+var sequentialStart = async function () {
+  console.log("### SEQUENTIAL START ###");
 
-   // 순차적 실행, 작업 소요 시간에 따른 종료
-   const slow = resolveAfter2Seconds();  // starts timer immediately
-   const fast = resolveAfter1Second();
-   // 그러나 await 순서에 따른 출력
-   console.log( 'concurrentStart ', await slow );
-   console.log( 'concurrentStart: ', await fast );  // waits for slow to finish, even though fast is already done!
- };
- 
- // 순차적으로 실행되고, 모든 작업들이 종료된 후 결과를 반환함.
- var stillConcurrent = function () {
-   console.log("### CONCURRENT START with Promise.all ###");
+  const slow = await resolveAfter2Seconds();
+  console.log('sequentialStart: ', slow);
 
-   // 모든 것들이 종료되고 난 다음에 결과들을을 반환
-   Promise.all([ resolveAfter2Seconds(), resolveAfter1Second() ])   
-      .then(
-         (messages) => {
-            console.log( 'stillConcurrent: ', messages[0] ); // slow
-            console.log( 'stillConcurrent: ', messages[1] ); // fast
-         },
-      );
- };
+  const fast = await resolveAfter1Second();
+  console.log('sequentialStart: ', fast);
+};
+
+// 순차적으로 실행되고, 먼저 작업 종료와 상관없이 await 순서로 출력함.
+var concurrentStart = async function () {
+  console.log("### CONCURRENT START with await ###");
+
+  // 순차적 실행, 작업 소요 시간에 따른 종료
+  const slow = resolveAfter2Seconds();  // starts timer immediately
+  const fast = resolveAfter1Second();
+  // 그러나 await 순서에 따른 출력
+  console.log( 'concurrentStart ', await slow );
+  console.log( 'concurrentStart: ', await fast );  // waits for slow to finish, even though fast is already done!
+};
+
+// 순차적으로 실행되고, 모든 작업들이 종료된 후 결과를 반환함.
+var stillConcurrent = function () {
+  console.log("### CONCURRENT START with Promise.all ###");
+
+  // 모든 것들이 종료되고 난 다음에 결과들을을 반환
+  Promise.all([ resolveAfter2Seconds(), resolveAfter1Second() ])   
+     .then(
+        (messages) => {
+           console.log( 'stillConcurrent: ', messages[0] ); // slow
+           console.log( 'stillConcurrent: ', messages[1] ); // fast
+        },
+     );
+};
  
- // 순차적으로 실행되고, 빨리 작업이 종료되는 것부터 결과를 반환함.
- var parallel = function () {
+// 순차적으로 실행되고, 빨리 작업이 종료되는 것부터 결과를 반환함.
+var parallel = function () {
    console.log("### PARALLEL with Promise.then ###");
 
    resolveAfter2Seconds().then((message) => console.log( 'parallel: ', message));
    resolveAfter1Second().then((message) => console.log( 'parallel: ', message));
- };
+};
  
- sequentialStart(); // after 2 seconds, logs "slow", then after 1 more second, "fast"
- // wait above to finish
- setTimeout(concurrentStart, 4000); // after 2 seconds, logs "slow" and then "fast"
- // wait again
- setTimeout(stillConcurrent, 7000); // same as concurrentStart
- // wait again
- setTimeout(parallel, 10000); // trully parallel: after 1 second, logs "fast", then after 1 more second, "slow"   
+sequentialStart(); // after 2 seconds, logs "slow", then after 1 more second, "fast"
+// wait above to finish
+setTimeout(concurrentStart, 4000); // after 2 seconds, logs "slow" and then "fast"
+// wait again
+setTimeout(stillConcurrent, 7000); // same as concurrentStart
+// wait again
+setTimeout(parallel, 10000); // trully parallel: after 1 second, logs "fast", then after 1 more second, "slow"   
+
+
+
+
+// async function getPlanets() 
+// {
+// 	// const res = axios.get( 'https://swapi.dev/api/planets/' );
+// 	// res.then( ( { data } ) => 
+// 	// 	{
+// 	// 		console.log( '*** data : ', data );
+// 	// 	} )
+// 	// 	.catch( ( err ) => 
+// 	// 	{
+// 	// 		console.log( '*** Error : ', err );
+// 	// 	} );
+// 	// console.log( '*** res : ', res );
+
+// 	// const res = axios.get( 'https://swapi.dev/api/planets/' );
+// 	// console.log( '*** data : ', res.data );   // Because res is unresolved promise, .data is undefined 
+	
+// 	const res = await axios.get( 'https://swapi.dev/api/planets/' );
+// 	console.log( '*** data : ', res.data );
+// }
+
+// getPlanets();
+
+
+
+// multiple async / await
+function moveX( element, amount, delay ) 
+{
+	return new Promise( ( resolve, reject ) => 
+	{
+		setTimeout( () => 
+		{
+			const bodyBoundary = document.body.clientWidth;
+			const elRight = element.getBoundingClientRect().right;
+			const currLeft = element.getBoundingClientRect().left;
+	
+			if( elRight + amount > bodyBoundary ) 
+			{
+				reject( { bodyBoundary, elRight, amount } );
+			}
+			else 
+			{
+				element.style.transform = `translateX(${ currLeft + amount }px)`;
+				resolve();
+			}
+
+		}, delay );		
+	});
+}
+
+// const btn = document.querySelector( 'button' );
+// console.log( 'btn : ', btn );
+// moveX( btn, 100, 1000 )
+// 	.then( () => moveX( btn, 100, 1000 ) )
+// 	.then( () => moveX( btn, 100, 1000 ) )
+// 	.then( () => moveX( btn, 100, 1000 ) )
+// 	.then( () => moveX( btn, 100, 1000 ) )
+// 	.then( () => moveX( btn, 100, 1000 ) )
+// 	.then( () => moveX( btn, 100, 1000 ) )
+// 	.then( () => moveX( btn, 100, 1000 ) )
+// 	.then( () => moveX( btn, 100, 1000 ) )
+// 	.catch( ( { bodyBoundary, amount, elRight } ) => 
+// 	{
+// 		console.log( `Cannot move! Body is ${ bodyBoundary }px wide` );
+// 		console.log( `Element is at ${ elRight }, ${ amount } is too large!`	 );
+// 	});
+
+const btn = document.querySelector( 'button' );
+async function animateRight( el, amount ) 
+{
+	await moveX( el, amount, 1000 );
+	await moveX( el, amount, 1000 );
+	await moveX( el, amount, 1000 );
+	await moveX( el, amount, 1000 );
+	await moveX( el, amount, 1000 );
+	await moveX( el, amount, 1000 );
+	await moveX( el, amount, 1000 );
+} 
+
+// return 값이 없는 async / await :  .catch() 로 오류처리
+animateRight( btn, 100 )
+	.catch( ( { bodyBoundary, amount, elRight } ) => 
+	{
+		console.log( `Cannot move! Body is ${ bodyBoundary }px wide` );
+		console.log( `Element is at ${ elRight }, added ${ amount } is too large!`	 );
+
+		animateRight( btn, -100 );
+	});
+	
+// return 값이 없는 async / await : try ~ catch 도 가능함
+const whereAmI = async function() 
+{
+   try {
+      const pos = await getPositon();
+      const { latitude: lat, longitude: lng } = pos.coords;  
+
+      const resGeo = await fetch( `https://geocode.xyz/${ lat },${ lng }? 
+         son=1` );  // 유료로 변경되어 사용불가
+      // const resGeo = await fetch( `https://geocode.xyz/37.55832,126.98480?json=1` );  // 유료로 변경되어 사용불가
+
+      if( !resGeo.ok ) throw new Error( 'Problem: getting location data' );
+      const dataGeo = await resGeo.json();
+      console.log( 'dataGeo : ', dataGeo );
+
+      const res = await fetch( `https://api.countrylayer.com/v2/name/
+         ${ dataGeo.country }` );
+      if( !res.ok ) throw new Error( '### Problem: getting country data' );
+      const data = await res.json();
+      console.log( data );
+      renderCountry( data[ 0 ] );
+   }
+   catch( err ) {
+      console.error( `### ${ err.message }` );
+   }
+}
+
+whereAmI();
+console.log( 'First' );
+
+
+
+/*
+   Asyc Fetch Promise( ES6 ) : 비동기 fetch 를 통한 ajax
+*/  
+
+const AJAX = async function( url, uploadData = undefined ) 
+{
+   const TIMEOUT_SEC = 5 * 1000;
+   try 
+   {
+      const fetchPro = uploadData  
+         ? fetch( 
+              url, 
+              {
+                 method: 'POST',
+                 headers: {
+                    'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(uploadData),
+              })
+         : fetch(url);
+
+      const res = await Promise.race( [ fetchPro ] );
+      const data = await res.json();
+
+    if ( !res.ok ) throw new Error( `${data.message} ( ${res.status} )` );
+    return data;
+  } 
+  catch (err) { throw err; }
+}
+
+AJAX( 'https://restcountries.com/v3.1/name/portugal' )
+   .then( data => console.log( 'AJAX : ', data ) )
+   .catch( err => console.error( 'AJAX : ', err ) );
+
+
+
+/*
+   Top Level await : aysnc 없는 await ( ES2022 )
+
+   await 코드 실행 완료 시까지 이후 코드 실행대기( 주의요망 )
+   module 에서 사용될 경우 import 하는 js 코드의 실행도 대기하게 된다.
+*/ 
+const getLastPost = async function() 
+{
+   const res = await fetch( 'https://jsonplaceholder.typicode.com/posts' );
+   const data = await res.json();
+
+   return { title: data.at( -1 ).title, text: data.at( -1 ).body };
+}
+
+const lastPost = getLastPost();
+console.log( lastPost );         // no object but Promise
+// lastPost.then( last => console.log( last ) );
+
+const lastPost2 = await lastPost();    // top level await :  await 로 한 번 더 감쌌으므로 getLastPost() 함수 전체가 완료될 때까지 대기
+console.log( lalstPost2 );             // object but no Promise 
+      
