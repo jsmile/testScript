@@ -61,10 +61,107 @@ firstReq.addEventListener( 'error', function( e ) {
    작업결과가 없으면 ok 에 false 반환하고,
    Network 문제 시에만 reject 반환
    resolve() 의 parameter 로 response 객체를 전달한다.  즉  resolve( response ) 임.
-   response.body : 반환되는 data 값들이 저장됨.
    response.json() : JSON.parse( Response.body ) 를 포함한 Promise() 로 반환함 
+   response.body : 반환되는 data 값들이 저장됨. 거의 사용하지 않음.
    Response 는 ReadableStream --> byte data
 */
+
+// fake fetch site : https://swapi.py4e.com/api/
+// fake fetch site : https://jsonplaceholder.typicode.com/
+// facke fetch sit : https://reqres.in/
+// fake fetch site : https://restcountries.com/v3.1/name/portugal
+
+// fetch basic
+fetch( 'https://swapi.py4e.com/api/planets/', {
+      headers: { Accept: 'application/json' }
+   })
+	.then( ( response ) => { // Response obj의 body is ReadableStream obj --> body.json()
+		// if ( !response.ok )
+		if ( response.status !== 200 )
+			throw new Error( `### Status Code Error: ${response.status}` );
+
+		response.json()
+         .then( (data) => {
+            for ( let planet of data.results ) {
+               console.log( 'planet.name: ', planet.name );
+            }
+         });
+	})
+	.catch( (err) => {
+		console.log( '### SOMETHING WENT WRONG WITH FETCH!' );
+		console.log( err );
+	});
+	
+
+// fetch chaining
+// fetch()  --> then( response ) { return response.json() } 
+//          --> then( data ) { return fetch() } 
+//          --> then( response ) { reutn response.json() } 
+//          --> then( data ) { console.log( data.title ) }
+//          --> catch( err ) { console.log( err ) }
+fetch( 'https://swapi.py4e.com/api/planets/' )
+	.then( (response) => {
+		if ( !response.ok )
+			throw new Error( `Status Code Error: ${response.status}` );
+
+		return response.json();    // json 형태의 data 를 Promise 객체로 반환
+	})
+	.then( (data) => {            // data: 반환된 Promise 객체를 javascript 객체 param 으로 받음
+		console.log( 'FETCHED ALL PLANETS (first 5)' );
+		const filmURL = data.results[0].films[0];
+      console.log( 'filmURL: ', filmURL );
+		return fetch( filmURL );   // fetch chaining
+	})
+	.then( (response) => {        // fetch chaining 으로 반환된 response 의 Promise 객체
+		if ( !response.ok )
+			throw new Error( `fetch chaining - Status Code Error: ${response.status}` );
+
+		return response.json();    // json 형태의 data 를 Promise 객체로 반환
+	})
+	.then((data) => {             // data: 반환된 Promise 객체를 javascript 객체 param 으로 받음
+		console.log( 'FETCHED FIRST FILM, based off of first planet' );
+		console.log( data.title );
+	})
+	.catch( (err) => {
+		console.log( 'SOMETHING WENT WRONG WITH FETCH!' );
+		console.log( err );
+   });
+
+
+// fetch chaining refactoring :  요청과 응답 처리를 분리하여 처리
+//   응답 확인
+const checkStatusAndParse = ( response ) => {
+	if ( !response.ok ) throw new Error( `Status Code Error: ${response.status}` );
+
+	return response.json();
+};
+//   응답 처리
+const printPlanets = ( data ) => {
+	console.log( 'Loaded 10 more planets...' );
+	for ( let planet of data.results ) {
+		console.log( 'planet.name: ', planet.name );
+	}
+	return Promise.resolve( data.next );
+};
+// 요청
+const fetchNextPlanets = ( url = 'https://swapi.py4e.com/api/planets/' ) => {
+	return fetch( url );
+};
+
+fetchNextPlanets()                     // 요청
+	.then( checkStatusAndParse )        // 응답 확인
+	.then( printPlanets )               // 응답 처리
+	.then( fetchNextPlanets )
+	.then( checkStatusAndParse )
+	.then( printPlanets )
+	.then( fetchNextPlanets )
+	.then( checkStatusAndParse )
+	.then( printPlanets )
+	.catch( (err) => {
+		console.log( 'SOMETHING WENT WRONG WITH FETCH!' );
+		console.log( err );
+});
+
 
 const getCountryData = function( countryName ) {
 
@@ -75,9 +172,6 @@ const getCountryData = function( countryName ) {
          if( !response.ok) {
             throw new Error('해당 국가를 찾을 수 없습니다. (' + response.status + ')');
          }
-         
-         // response.body : 반환되는 data 값들이 저장됨.
-         console.log( 'fetch response.body: ', response.body );
          
          // response.json() : JSON.parse( Response.body ) 를 포함한 Promise() 로 반환함
          response.json()
@@ -464,6 +558,6 @@ const lastPost = getLastPost();
 console.log( lastPost );         // no object but Promise
 // lastPost.then( last => console.log( last ) );
 
-const lastPost2 = await lastPost();    // top level await :  await 로 한 번 더 감쌌으므로 getLastPost() 함수 전체가 완료될 때까지 대기
+const lastPost2 = lastPost();    // top level await :  await 로 한 번 더 감쌌으므로 getLastPost() 함수 전체가 완료될 때까지 대기
 console.log( lalstPost2 );             // object but no Promise 
       

@@ -561,7 +561,7 @@ selectedItemUl.addEventListener( 'DOMNodeRemoved', function( event )
    그 외 DOM 작업                            : immediate excution task
 */  
 
-el = document.querySelector( 'img' );
+const el = document.querySelector( 'img' );
 // // BAD: Might not work as expected
 // el.src = 'dog.jpg';
 // el.classList.add('fadeIn');  // Too early!
