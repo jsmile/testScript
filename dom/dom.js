@@ -63,7 +63,7 @@
  * noticePopup.removeAttribute( 'style' );
  * 
  * 
- * // data Attribute
+ * // data Attribute( 사용자 정의 attribute )
  * data- 로 시작되는 attribute 는 script 에서 접근 시 camel case 로 접근
  * 
  * < a href="#"  data-version-number="2.0" >
@@ -151,6 +151,28 @@
  *       ^=                              :    값의 시작이
  *       $=                              :    값의 끝이  
  *       *=                              :    값에서   
+ * 
+ * 
+ * ## DOM LifeCycle
+ * - DOMContentLoaded :  HTML 파싱이 끝나고 DOM Tree 완료. 그러나 외부 resource 는 아직 X.
+ * - load :  DOM Tree 완료 + 외부 resource 까지 준비완료.
+ * 
+ * 
+ * ## Capturing Phase-> Target Phase -> Bubbling Phase
+ * - Capturing Phase :  document root 부터 이벤트를 발생시킨 element 까지
+ * - Target Phase    :  이벤트를 발생시킨 element
+ * - Bubbling Phase  :  이벤트를 발생시킨 element 부터 최상위 parent Element 까지
+ * 
+ * 
+ * ## event 함수 안의 this
+ * - e.currentTarget === this   // Event 를 걸어놓은 해당 element
+ * 
+ * 
+ * ## e.stopPropergation()   :  추가적인 Bubbling Phase 전파 방지
+ * - addEventListener() 함수 마지막 줄에 선언
+ * 
+ * ## Event Delegation, e.defaultPrevent()
+ * - element 의 기본동작 방지
  * 
  * 
  * ## Asynchronous task with DOM
@@ -547,6 +569,69 @@ selectedItemUl.addEventListener( 'DOMNodeRemoved', function( event )
 	document.querySelector( '#checkItemsSpan' ).innerText = '선택된 기관 수 :  ' + itemsCount + ' 개';
 });
 */
+
+
+/*
+   DOM LifeCycle
+
+   - DOMContentLoaded :  HTML 파싱이 끝나고 DOM Tree 완료. 그러나 외부 resource 는 아직 X.
+   - load :  DOM Tree 완료 + 외부 resource 까지 준비완료.
+*/
+document.addEventListener('DOMContentLoaded', function (e) {
+  console.log('HTML parsed and DOM tree built!', e);
+});
+
+document.addEventListener('load', function (e) {
+  console.log('Page Fully Loaded!', e);
+});
+
+
+
+// event 함수 안의 this
+e.currentTarget === this   // Event 를 걸어놓은 해당 element
+
+
+
+/*
+   e.stopPropergation()   :  추가적인 Bubbling Phase 전파 방지
+
+   - addEventListener() 함수 마지막 줄에 선언
+*/
+
+element.addEventListener( 'click', function( e ) {
+   //…..
+   e.stopPropergation();
+} );
+
+
+/*
+   Event Delegation, e.defaultPrevent()
+   - add eventListener to the common parent element
+   - Determine what element is originated the event
+*/
+
+// 개별 element 에 이벤트 걸기
+document.querySelectorAll( '.nav_link' ).forEach( function( el ) {
+   
+   el.addEventListener( 'click', function( e ) {
+
+      e.preventDefault();   // <a> 의 기본동작 방지
+         const id = this.getAttribute( 'href' );
+         document.querySelector( id ).scrollIntoView( { behavior: 'smooth' } );
+   } );
+} );
+//=> delegation
+// '.nav_links' 하위의 모든 element 에 이벤트 걸기 
+document.querySelector( '.nav_links' ).addEventListener( 'click', function() {
+
+   e.preventDefault();   // <a> 의 기본동작 방지
+   // origined event
+   if( e.target.classList.contains( 'nav_link' ) ) {
+      
+         const id = this.getAttribute( 'href' );
+         document.querySelector( id ).scrollIntoView( { behavior: 'smooth' } );      
+   }
+} );
 
 
 

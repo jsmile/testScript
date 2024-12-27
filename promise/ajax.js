@@ -163,6 +163,7 @@ fetchNextPlanets()                     // 요청
 });
 
 
+// fetch basic 2
 const getCountryData = function( countryName ) {
 
    // fetch( 'https://restcountries.eu/rest/v2/name/' + countryName)
