@@ -5,7 +5,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Prevent Global Variable Complict</title>
 
-   <script src="./module.js"></script>
+   <!-- IIFE 함수 활용 -->
    <script>
       var globalSecret = 'Hellow';
       var fight = 'Hi~Hi';
@@ -19,9 +19,13 @@
          console.log( '*** globalSecret 2 : ', globalSecret );
       })( globalSecret );                         // 필요한 변수를 param 으로 받아오기
    </script>
-   <script type="module" src="./commonjs.js"></script>
+   <!-- moduel pattern -->
+   <script src="./user-module.js"></script>
+   <script src="./payment-module.js"></script>
+   <!-- ES6 Modules -->
+   <script type="module" src="./common.js"></script>
    <script type="module">
-      import sayHello,{ fight } from './commonjs.js';
+      import { sayHello, fight2 as fight } from './common.js';
       sayHello();
       console.log( fight( 'A', 'B' ) );
    </script>
