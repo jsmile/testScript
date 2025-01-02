@@ -9,6 +9,9 @@
  *       < 4. ES6 module pattern( import~from, export default 함수명, export 함수명 )  
  *       < 5. commonJS module(  실행순서 문제 해결 : require(), module.exports {객체} )
  * 
+ * 실행 순서는 일반 javascript 들의 선언을 순서대로 실행한 뒤
+ *   script type="module" 들을 선언한 순서대로 실행함.
+ * 
 */
 
 // 1. closure 방식 :  count 변수를 독립적으로 사용
@@ -128,7 +131,7 @@ console.log( 'Module Pattern fightModule.fight(): ', fightModule.fight( 'Merry',
 // - module object 생성 사용: module 에 대한 namespace 를 사용하여 접근 가능.
 // - Aggregating modules 사용: 여러 module을 하나의 module로 통합하여 사용 가능.
 
-// mofule1.js
+// module1.js
 // module2.js
 // module-rename.js
 // common.js

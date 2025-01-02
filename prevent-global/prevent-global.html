@@ -5,11 +5,13 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Prevent Global Variable Complict</title>
 
+   <!-- 실행순서 1 -->
    <!-- IIFE 함수 활용 -->
    <script>
       var globalSecret = 'Hellow';
       var fight = 'Hi~Hi';
    </script>
+   <!-- 실행순서 2 -->
    <script>
       (function( globalSecret ) 
       {
@@ -20,19 +22,24 @@
       })( globalSecret );                         // 필요한 변수를 param 으로 받아오기
    </script>
    <!-- moduel pattern -->
+    <!-- 실행순서 3 -->
    <script src="./user-module.js"></script>
+   <!-- 실행순서 4 -->
    <script src="./payment-module.js"></script>
    <!-- ES6 Modules -->
+    <!-- 실행순서 6 -->
    <script type="module" src="./common.js"></script>
+   <!-- 실행순서 7 -->
    <script type="module">
       import { sayHello, fight2 as fight } from './common.js';
       sayHello();
-      console.log( fight( 'A', 'B' ) );
+      console.log( "fight( 'A', 'B' ) : ", fight( 'A', 'B' ) );
    </script>
 
 </head>
 <body>
    <div>전역변수 충돌방지</div>
+   <!-- 실행순서 5 -->
    <script src="prevent-global.js"></script>
 </body>
 </html>

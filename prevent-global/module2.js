@@ -3,7 +3,7 @@
    - 함수 앞에 export 키워드를 붙이면 외부에서 사용할 수 있는 함수로 선언된다.
 */
 
-import { fight as fight1} from './module1.js'; // .fight
+import { fight as fight1} from './module1.js';     // as fight1:  현재 module 의 fight 함수와 충돌 방지를 위해 이름 변경
 // import module2 from 'module2'; // .importedFunc
 
 var herry = 'potter';
