@@ -8,6 +8,15 @@
  *       < 3. Module Pattern( 공개하고 싶은 것만 객체로 return 함 ) 
  *       < 4. ES6 module pattern( import~from, export default 함수명, export 함수명 )  
  *       < 5. commonJS module(  실행순서 문제 해결 : require(), module.exports {객체} )
+ *             브라우저에서 직접 지원하지 않음 - 변환 도구 필요 (Browserify, Webpack 등)
+ *                Browserify 사용:  <script src="bundle.js"></script>
+ *                Webpack 사용:     // webpack.config.js
+ *                                  module.exports = {
+ *                                     entry: './src/main.js',
+ *                                     output: {
+ *                                         filename: 'bundle.js'
+ *                                  }
+};
  * 
  * 실행 순서는 일반 javascript 들의 선언을 순서대로 실행한 뒤
  *   script type="module" 들을 선언한 순서대로 실행함.
@@ -168,3 +177,92 @@ console.log( 'Module Pattern fightModule.fight(): ', fightModule.fight( 'Merry',
 // ./dynamic-commonjs/stripe-payment.js
 // ./dynamic-commonjs/dynamic-payment-service.js      // 조건 동적 호출, 환경 동적 호출 
 // ./dynamic-commonjs/dynamic-payment-example.js
+
+/*
+module.exports = {
+    entry: {
+        app: './src/app.js',        // 일반 사용자용 쇼핑몰 페이지
+        admin: './src/admin.js',     // 관리자 페이지
+        vendor: './src/vendor.js'    // 외부 라이브러리 모음
+    }
+}
+app: './src/app.js'
+일반 사용자가 보는 쇼핑몰 페이지용 진입점
+// app.js
+import { ProductList } from './components/ProductList';
+import { ShoppingCart } from './components/ShoppingCart';
+import { UserProfile } from './components/UserProfile';
+
+// 사용자 관련 기능들
+const app = {
+    showProducts() { ... },      // 상품 목록 표시
+    addToCart() { ... },         // 장바구니 추가
+    checkout() { ... }           // 결제 진행
+};
+admin: './src/admin.js'
+관리자 페이지용 진입점
+// admin.js
+import { ProductManager } from './admin/ProductManager';
+import { OrderManager } from './admin/OrderManager';
+import { UserManager } from './admin/UserManager';
+
+// 관리자 관련 기능들
+const admin = {
+    addProduct() { ... },        // 상품 추가
+    manageOrders() { ... },      // 주문 관리
+    manageUsers() { ... }        // 회원 관리
+};
+vendor: './src/vendor.js'
+외부 라이브러리 모음용 진입점
+// vendor.js
+import 'jquery';
+import 'bootstrap';
+import 'moment';
+import 'chart.js';
+
+// 자주 사용되는 외부 라이브러리들을 모아둠
+실제 사용 예시:
+
+HTML 파일에서:
+<!-- 일반 사용자용 페이지 (index.html) -->
+<html>
+    <head>
+        <title>온라인 쇼핑몰</title>
+        <script src="dist/vendor.js"></script>  <!-- 공통 라이브러리 -->
+        <script src="dist/app.js"></script>     <!-- 사용자용 코드 -->
+    </head>
+    <body>
+        <div id="product-list"></div>
+        <div id="shopping-cart"></div>
+    </body>
+</html>
+
+<!-- 관리자 페이지 (admin.html) -->
+<html>
+    <head>
+        <title>관리자 페이지</title>
+        <script src="dist/vendor.js"></script>  <!-- 공통 라이브러리 -->
+        <script src="dist/admin.js"></script>   <!-- 관리자용 코드 -->
+    </head>
+    <body>
+        <div id="product-manager"></div>
+        <div id="order-manager"></div>
+    </body>
+</html>
+이렇게 분리함으로써 얻는 이점:
+
+코드 분리
+일반 사용자는 admin.js를 다운로드할 필요가 없음
+관리자 페이지 접속 시에만 admin.js 로드
+페이지 로딩 시간 최적화
+캐시 활용
+vendor.js는 자주 변경되지 않으므로 브라우저에 캐시됨
+app.js나 admin.js가 업데이트되어도 vendor.js는 재다운로드 불필요
+보안
+관리자 코드와 일반 사용자 코드를 완전히 분리
+일반 사용자가 관리자 기능 코드를 볼 수 없음
+유지보수
+각 역할별로 코드가 분리되어 있어 유지보수 용이
+팀별로 각각 다른 파일 담당 가능 (예: 프론트엔드 팀은 app.js, 관리자 팀은 admin.js)
+이처럼 여러 엔트리 포인트를 사용하면 코드를 논리적으로 분리하고, 필요한 코드만 필요한 페이지에 로드할 수 있어 효율적인 웹 애플리케이션 구현이 가능
+*/
