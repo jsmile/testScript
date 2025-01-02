@@ -145,8 +145,26 @@ console.log( 'Module Pattern fightModule.fight(): ', fightModule.fight( 'Merry',
 // ----------------------------------------------------------------------------------------
 
 // 5. commonJS module - javascript 간의 호출 순서 문제 해결
-// 모든 script들을 하나의 script로 통합( browserify script.js > bundle.js )
-// commonjs.js
+// 
+// - 상대경로를 사용하여 다른 모듈 호출
+// - 동적으로 모듈을 로드할 수 있음 (조건부 로딩 가능)
+// - 필요한 시점에만 모듈을 로드하여 메모리 사용량을 줄일 수 있음
+// - 모듈 캐싱을 통한 성능 최적화
+// - 실행 환경에 따른 다른 구현 선택 가능
+//
+// 내보내기
+//    module.exports = { function1, function2 };
+// 가져오기
+//    const module = require('./module');
 
-// var module1 = require( './module1' ); // .fight       require() 로 다른 module( .js ) 호출
-// var module2 = require( './module2' ); // .importedFunc
+// CommonJS 모듈 예제 - 사용자 서비스
+// user-service.js      // 선언 및 module.export
+// payment-service.js   // 선언, require, module.export
+// common-js.js         // 복수개의 module 호출
+
+
+// CommonJS 모듈 예제 - 동적인 module 호출
+// ./dynamic-commonjs/paypal-payment.js
+// ./dynamic-commonjs/stripe-payment.js
+// ./dynamic-commonjs/dynamic-payment-service.js      // 조건 동적 호출, 환경 동적 호출 
+// ./dynamic-commonjs/dynamic-payment-example.js
