@@ -141,6 +141,7 @@ const printPlanets = ( data ) => {
 	for ( let planet of data.results ) {
 		console.log( 'planet.name: ', planet.name );
 	}
+   // "next": "https://swapi.py4e.com/api/planets/?page=2"
 	return Promise.resolve( data.next );
 };
 // 요청
@@ -225,9 +226,9 @@ getCountryData( 'south%20korea' );     // %20 : 공백문자
 async function postData( url = "", data = {} ) {
    // 옵션 기본 값은 *로 강조
    const options = {
-      method: "POST", // *GET, POST, PUT, DELETE 등
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      method: "POST",      // *GET, POST, PUT, DELETE 등
+      mode: "cors",        // no-cors, *cors, same-origin
+      cache: "no-cache",   // *default, no-cache, reload, force-cache, only-if-cached
       credentials: "same-origin", // include, *same-origin, omit
       headers: {
         "Content-Type": "application/json",
@@ -252,7 +253,8 @@ async function postData( url = "", data = {} ) {
 /*
    Async, Await : 비동기화된 Promise 객체를 반환한다, ES7( 2017 )
 
-   - async function : 암시적으로 Promise를 사용하여 결과를 반환, 내용에 await 가 포함될 수 있음.
+   - async function : 내용에 await 없이도 암시적으로 Promise를 사용하여 결과를 반환, 
+                      내용에 await 가 포함되어 있는 경우에는 반드시 async 를 표시해야 함함.
    - await Promise 는 Promise.then( (res) = {} ) 와 동일함.
    - 성공( resolve )과 실패( reject )를 가지고 있는 callback 함수를 포함한 Promise 객체를 반환한다.
    - 기본은 성공( resolve )을 반환하는데 함수 내에서 throw 를 해줄 때에만 실패( reject )를 반환한다.
@@ -260,6 +262,7 @@ async function postData( url = "", data = {} ) {
    - IE 지원하지 않음.
 */
 
+// await 없는 async function
 async function foo() {
    return 1;
  }
@@ -268,7 +271,7 @@ function foo() {
    return Promise.resolve(1);
 } 
 
-
+// await 있는 async function
 async function foo() {
    await 1;
  }
@@ -277,7 +280,7 @@ function foo() {
    return Promise.resolve(1).then(() => undefined);
 } 
 
-
+// await 없는 async function
 async function add( x, y ) {
    
    if( typeof x !== 'number' || typeof y !== 'number' ) {
@@ -311,6 +314,7 @@ add( 'c', 2 )
 // async ~ await 사용 예제
 var resolveAfter2Seconds = function () {
    console.log("시작...slow promise");
+
    return new Promise((resolve) => {
      setTimeout(function () {
        resolve(20);
@@ -321,6 +325,7 @@ var resolveAfter2Seconds = function () {
 
 var resolveAfter1Second = function () {
   console.log("시작...fast promise");
+
   return new Promise((resolve) => {
     setTimeout(function () {
       resolve(10);
@@ -370,8 +375,8 @@ var stillConcurrent = function () {
 var parallel = function () {
    console.log("### PARALLEL with Promise.then ###");
 
-   resolveAfter2Seconds().then((message) => console.log( 'parallel: ', message));
-   resolveAfter1Second().then((message) => console.log( 'parallel: ', message));
+   resolveAfter2Seconds().then((message) => console.log( 'parallel 2Seconds: ', message));
+   resolveAfter1Second().then((message) => console.log( 'parallel 1Second: ', message));
 };
  
 sequentialStart(); // after 2 seconds, logs "slow", then after 1 more second, "fast"
