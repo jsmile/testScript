@@ -3,7 +3,7 @@
  * 
  * - 성공( resolve )과 실패(  reject )를 가지고 있는 callback 함수를 포함한 Promise 객체를 반환한다.
  * - Micro Task Queue 이용
- * - Promise 형 return 값  --> then() 내 함수의 param으로 전달된다.
+ * - Promise 형 return 값( resolve 의 param )  --> then() 내 함수의 param으로 전달된다.
  * - 복수개의 Promise 가 실행되는 경우에는 실행은 순서대로 진행되지만 결과는 순서를 보장하지 않는다.
  * 
  * - 만드는 방법 1 : 변수에 직접 new Promise( ( resolve, reject ) => { … } ) 
@@ -24,11 +24,11 @@ const myPromise = new Promise( ( resolve, reject ) =>
       const ran = Math.random();
       if( ran < 0.5 )           // resolve() 나 reject() 할 조건을 임의로 만듬.
       { 
-         resolve( '성공' );        // 성공 시 실행되는 callback 함수
+         resolve( '성공' );        // 성공 시 실행되는 callback 함수, resolve 의 param 인 '성공' 이 반환됨
       }
       else 
       { 
-         reject( '실패' );          // 오류 시 실행되는 callback 함수
+         reject( '실패' );          // 오류 시 실행되는 callback 함수, reject 의 param 인 '실패' 가 반환됨
       }
    } );
    
@@ -63,16 +63,16 @@ promise2
       return res + '#';
    })
    .catch( function( err )                               // promise2 의 error 시 호출 'Reject Worked'
-   {
-      console.log( 'promise2_err1 : ', err );
+   {                                                     
+      console.log( 'promise2_err1 : ', err );            // error 시 더이상 진행하지 않음.
    })
-   .then( function ( result )                            // error 와 상관없이 바로 앞 then() 의 return 값이 전달됨. 
+   .then( function ( result )                            // error 발생이 없으면 바로 앞 then의 return 값이 전달됨. 
    {
-      console.log( 'result : ', result );		            // 마지막이라 return 이 필요없음 : Resolve Worked ?!#
+      console.log( '***result : ', result );	
    })
-   .catch( (error) =>                                 // 어느 곳에서나 error 이 발생하면 호출됨
+   .catch( (error) =>                                    // 이전 catch 이후에 error 발생 시 호출됨
    {
-      console.log( error );
+      console.log( 'last error: ', error );
    });
 
 
@@ -160,7 +160,7 @@ fakeRequest('/users')
 
 // 동기적으로 실행되는 Promies: 실패가 없는 경우에만 성공 결과 모두 반환, 실패가 있으면 실패만 반환
 // 복수개의 Promise 가 실행되는 경우에는 실행은 순서대로 진행되지만 결과의 순서를 보장하지 않음음.
-Promise.all( [  
+Promise.all( [     
    Promise.resolve( 'Success 1' ),           // 성공 1
    Promise.reject( 'Error' ),                // 실패 1
    Promise.resolve( 'Success 2' )            // 성공 2

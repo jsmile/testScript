@@ -186,6 +186,7 @@ module.exports = {
         vendor: './src/vendor.js'    // 외부 라이브러리 모음
     }
 }
+
 app: './src/app.js'
 일반 사용자가 보는 쇼핑몰 페이지용 진입점
 // app.js
@@ -199,6 +200,7 @@ const app = {
     addToCart() { ... },         // 장바구니 추가
     checkout() { ... }           // 결제 진행
 };
+
 admin: './src/admin.js'
 관리자 페이지용 진입점
 // admin.js
@@ -212,6 +214,7 @@ const admin = {
     manageOrders() { ... },      // 주문 관리
     manageUsers() { ... }        // 회원 관리
 };
+
 vendor: './src/vendor.js'
 외부 라이브러리 모음용 진입점
 // vendor.js
